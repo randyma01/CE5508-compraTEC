@@ -1,0 +1,16 @@
+# -- general --#
+# mac os x extras
+**/.DS_Store
+.DS_Store
+**/.bin
+.bin
+
+# -- catalog_services --#
+catalog_services/node_modules
+
+# -- orders_services --#
+orders_services/node_modules
+
+# -- users_services --#
+users_services/node_modules
+
