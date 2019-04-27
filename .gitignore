@@ -6,7 +6,7 @@
 .bin
 
 # -- catalog_services --#
-catalog_services/node_modules
+catalog_services/nodejs_graphql/node_modules
 
 # -- orders_services --#
 orders_services/node_modules
