@@ -6,11 +6,11 @@
 .bin
 
 # -- catalog_services --#
-catalog_services
+catalog_service
 
 # -- orders_services --#
-orders_services/nodejs_graphql/node_modules
+orders_service/nodejs_graphql/node_modules
 
 # -- users_services --#
-users_services/node_modules
+users_service/node_modules
 
