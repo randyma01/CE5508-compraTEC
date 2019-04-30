@@ -1,17 +1,41 @@
-import Hapi from 'hapi';
-import mongoose from 'mongoose';
+import hapi from 'hapi';
+//import mongoose from 'mongoose';
+import { graphqlHapi, graphiqlHapi } from 'apollo-server-hapi';
+
+import createFlowersRoutes from './api/v1/flowers';
+import schema from './graphql/schema';
 
 const init = async () => {
-  const server = Hapi.server({
+  const server = hapi.server({
     port: 8080,
     host: '0.0.0.0'
   });
 
-  server.route({
-    method: 'GET',
-    path: '/',
-    handler: (request, h) => {
-      return 'Ran, the world is yours!';
+  createFlowersRoutes(server);
+
+  /* try {
+    mongoose.connect('mongodb://localhost/flowersDB', {useNewUrlParser: true});
+    mongoose.connection.once('open', () => {
+      console.log('connected to database');
+    }); */
+
+  await server.register({
+    plugin: graphiqlHapi,
+    options: {
+      path: '/graphiql',
+      graphiqlOptions: {
+        endpointURL: '/graphql'
+      },
+      route: { cors: true }
+    }
+  });
+
+  await server.register({
+    plugin: graphqlHapi,
+    options: {
+      path: '/graphql',
+      graphqlOptions: { schema },
+      route: { cors: true }
     }
   });
 

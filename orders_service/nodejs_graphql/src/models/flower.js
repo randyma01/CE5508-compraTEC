@@ -1,4 +1,4 @@
-const mongoose = require('mongoose'); //cambiar es6
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 

@@ -4,6 +4,7 @@
 .DS_Store
 **/.bin
 .bin
+.vscode
 
 # -- catalog_services --#
 catalog_service
