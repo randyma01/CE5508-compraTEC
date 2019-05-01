@@ -6,7 +6,9 @@
 .bin
 
 # -- catalog_services --#
-catalog_services
+catalog_services/python_graphql/__pycache__
+**/__pycache__
+**/__pycache__/schema.cpython-37.pyc
 
 # -- orders_services --#
 orders_services/nodejs_graphql/node_modules

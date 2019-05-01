@@ -1,27 +1,21 @@
 from flask import Flask
 from flask_graphql import GraphQLView
 from pymongo import MongoClient
-
+from database import init_db
 from schema import schema
 
 #print("Hello World from Python 3.7.2!!")
 
 app = Flask(__name__)
- 
+app.debug = True
+
 app.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
 
-
-@app.route("/")
-def hello():
-    return "Hi World! - Test Flask"
-
-
-@app.route("/db")
-def db():
-    #clientDB = MongoClient("mongodb+srv://admin:admin@compratec-lcbic.mongodb.net/test?retryWrites=true")
-    return "Test MongoClient!!"
-
+@app.route("/test")
+def test():
+    return "Server Run TEST!!!"
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    init_db()
+    app.run(port=8080)
