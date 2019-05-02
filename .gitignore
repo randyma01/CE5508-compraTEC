@@ -6,9 +6,7 @@
 .bin
 
 # -- catalog_services --#
-catalog_services/python_graphql/__pycache__
 **/__pycache__
-**/__pycache__/schema.cpython-37.pyc
 
 # -- orders_services --#
 orders_services/nodejs_graphql/node_modules
@@ -16,3 +14,5 @@ orders_services/nodejs_graphql/node_modules
 # -- users_services --#
 users_services/node_modules
 
+#test-Gustavo
+docker-compose.yml

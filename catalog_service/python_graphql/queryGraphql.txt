@@ -1,0 +1,35 @@
+mutation insertFlower {
+  createFlower (
+      name:"Rosa Roja",
+      color: "Rojas",
+      price: 3500,
+      stock: 20) 
+  {
+    name
+   	color
+    price
+    stock
+  }
+}
+
+query getAll{
+  getFlowers {
+    id
+    name
+    price
+    color
+    stock
+  }
+}
+
+mutation delete {
+  deleteFlower (id:"5cca1c6294cc6542bc1d68da", name:"Rosa Blanda") {
+    id
+  }
+}
+
+mutation update {
+  updateFlower (id:"5cca461f5da8132d83cb4872", name:"Rosas", price:2500, color:"Roja", stock:18) {
+    id
+  }
+}
