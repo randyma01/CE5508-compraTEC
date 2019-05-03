@@ -13,12 +13,6 @@ const init = async () => {
 
   createFlowersRoutes(server);
 
-  /* try {
-    mongoose.connect('mongodb://localhost/flowersDB', {useNewUrlParser: true});
-    mongoose.connection.once('open', () => {
-      console.log('connected to database');
-    }); */
-
   await server.register({
     plugin: graphiqlHapi,
     options: {

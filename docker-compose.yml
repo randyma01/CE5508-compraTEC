@@ -3,7 +3,7 @@ version: '3'
 services:
 
   catalog_services:
-    image: randyma01/containerhapi3
+    image: 
     depends_on:
       - '***************'
     deploy:
@@ -15,7 +15,7 @@ services:
       - webnets
   
   orders_services:
-      image: ***************
+      image: 
     depends_on:
       - ***************
     deploy:
@@ -27,7 +27,7 @@ services:
       - webnets
   
   users_services:
-    image: ***************
+    image: 
     depends_on:
       - ***************
     deploy:
@@ -50,7 +50,7 @@ services:
   mysqldb:
     image: mysql
     ports:
-      - '***************'
+      - '3306:3306'
     volumes:
       - "/home/docker/data:/data"
     networks:

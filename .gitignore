@@ -13,5 +13,6 @@ catalog_service
 orders_service/nodejs_graphql/node_modules
 
 # -- users_services --#
-users_service/node_modules
+users_service/composer
+users_service/webonyx
 

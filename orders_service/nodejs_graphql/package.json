@@ -1,13 +1,13 @@
 {
-  "name": "nodejs_server_moongose_grahpql",
+  "name": "orders_service",
   "version": "1.0.0",
-  "description": "trabajo en clase servidor + nodejs + mongodb + graphql",
+  "description": "microservice for running orders in compraTEC",
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "gustavo y randy",
   "license": "ISC",
   "dependencies": {
     "apollo-server-hapi": "^1.3.6",
