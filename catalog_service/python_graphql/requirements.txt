@@ -4,4 +4,6 @@ dnspython
 graphene
 graphene-mongo
 Flask-GraphQL
+Flask-PyMongo
+flask_Mongoengine
 graphene-mongodb
