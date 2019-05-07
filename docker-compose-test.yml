@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+
+  mongodb:
+    image: mongo
+    container_name: "mongodb"
+    command: "mongod --port 27017"
+    ports: 
+      - '27018:27017'
+    volumes:
+      - 'mongo:/data/db'
+    networks:
+      - db_net
+      
+  catalog_services:
+    image: catalog-service:v5
+    container_name: "catalog-servive"
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '4000:7000'
+    networks:
+      - db_net
+
+networks:
+  db_net:
+
+volumes:
+  mongo:
