@@ -1,4 +1,4 @@
-import Flower from '../../../models/flower';
+import Order from '../../../models/order';
 
 function flowersRoutes(server) {
   server.route([

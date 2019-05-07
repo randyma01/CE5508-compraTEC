@@ -2,17 +2,15 @@
 FROM node:11
 
 # Working Directory
-WORKDIR /usr/src/app
+WORKDIR /app
+COPY package.json /app
 
-# Install all Dependencies
-COPY package*.json ./
+# Dependencies
 RUN npm install
-
-#Bundle App Source
-COPY . .
+COPY . /app
 
 #Port
-EXPOSE 8080
+EXPOSE 8000
 
 #Execute 
-CMD [ "npm", "start" ]
+CMD npm start

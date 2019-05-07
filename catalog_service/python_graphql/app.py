@@ -1,21 +1,31 @@
+import os
+import socket
 from flask import Flask
 from flask_graphql import GraphQLView
+from flask_pymongo import PyMongo
+from flask_mongoengine import MongoEngine, MongoEngineSessionInterface
 from pymongo import MongoClient
-from database import init_db
-from schema import schema
+from mongoengine import connect
+from src.database import init_db
+from src.schemas.schema import schema
 
-#print("Hello World from Python 3.7.2!!")
+db = MongoEngine()
 
 app = Flask(__name__)
-app.debug = True
+
+app.config['MONGODB_SETTINGS'] = {
+    'db': 'compraTEC',
+    'host': 'localhost',
+    'port': 27018
+}
+db.init_app(app)
+
 
 app.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
 
-@app.route("/test")
-def test():
-    return "Server Run TEST!!!"
-
-
 if __name__ == "__main__":
-    init_db()
-    app.run(port=8080)
+    #init_db()
+    #db = client.compraTEC
+    #app.session_interface = MongoEngineSessionInterface(db)
+
+    app.run(host='0.0.0.0', port=8080)
