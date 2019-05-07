@@ -1,4 +1,4 @@
-import Sequelize, { DataTypes } from 'sequelize';
+import Sequelize from 'sequelize';
 
 const db = new Sequelize('compratec', 'usctec@ctec', 'pwctec1234*', {
   dialect: 'mysql',
