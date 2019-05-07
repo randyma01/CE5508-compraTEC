@@ -1,0 +1,72 @@
+version: '3'
+
+services:
+
+  catalog_services:
+    image: 
+    depends_on:
+      - '***************'
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '***************'
+    networks:
+      - webnets
+  
+  orders_services:
+      image: 
+    depends_on:
+      - ***************
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '49160:8080'
+    networks:
+      - webnets
+  
+  users_services:
+    image: 
+    depends_on:
+      - ***************
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '***************'
+    networks:
+      - webnets
+
+  mongodb:
+    image: mongo
+    ports: 
+      - '27017:27017'
+    volumes:
+      - "/home/docker/data:/data"
+    networks: 
+      - backend
+  
+  mysqldb:
+    image: mysql
+    ports:
+      - '3306:3306'
+    volumes:
+      - "/home/docker/data:/data"
+    networks:
+      - backend
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+
+networks:
+  webnet:

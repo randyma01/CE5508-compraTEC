@@ -1,22 +1,43 @@
-import Hapi from 'hapi';
-import mongoose from 'mongoose';
+import hapi from 'hapi';
+import { graphqlHapi, graphiqlHapi } from 'apollo-server-hapi';
+import createFlowersRoutes from './api/v1/order';
+import schema from './graphql/schema';
 
 const init = async () => {
-  const server = Hapi.server({
-    port: 8000,
-    host: 'localhost'
+  const server = hapi.server({
+    port: 8080,
+    host: '0.0.0.0'
   });
 
-  server.route({
-    method: 'GET',
-    path: '/',
-    handler: (request, h) => {
-      return 'Hello World!';
-    }
-  });
 
-  await server.start();
-  console.log('Server running on %ss', server.info.uri);
+  try {
+
+    await server.register({
+      plugin: graphiqlHapi,
+      options: {
+        path: '/graphiql',
+        graphiqlOptions: {
+          endpointURL: '/graphql'
+        },
+        route: { cors: true }
+      }
+    });
+
+    await server.register({
+      plugin: graphqlHapi,
+      options: {
+        path: '/graphql',
+        graphqlOptions: { schema },
+        route: { cors: true }
+      }
+    });
+
+    await server.start();
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
+  }
+  console.log('Server running on %s', server.info.uri);
 };
 
 process.on('unhandledRejection', err => {
