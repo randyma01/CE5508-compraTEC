@@ -3,38 +3,28 @@ version: '3'
 services:
 
   catalog_services:
-    image: 
+    container_name: catalog_services
+    image: randyma01/catalog_services:v2.0.0
     depends_on:
-      - '***************'
+      - 'mongo'
     deploy:
       restart_policy:
         condition: on-failure
     ports:
-      - '***************'
+      - '7000:8080'
     networks:
       - webnets
   
   orders_services:
-      image: 
-    depends_on:
-      - ***************
+      container_name: orders_service
+      image: randyma01/orderservices:v2.0.0
+      depends_on:
+      - 'mongo'
     deploy:
       restart_policy:
         condition: on-failure
     ports:
-      - '49160:8080'
-    networks:
-      - webnets
-  
-  users_services:
-    image: 
-    depends_on:
-      - ***************
-    deploy:
-      restart_policy:
-        condition: on-failure
-    ports:
-      - '***************'
+      - '7001:8080'
     networks:
       - webnets
 
@@ -46,20 +36,12 @@ services:
       - "/home/docker/data:/data"
     networks: 
       - backend
+    commands: mongod --replSet rs0
   
-  mysqldb:
-    image: mysql
-    ports:
-      - '3306:3306'
-    volumes:
-      - "/home/docker/data:/data"
-    networks:
-      - backend
-
   visualizer:
     image: dockersamples/visualizer:stable
     ports:
-      - "8080:8080"
+      - "80:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     deploy:
@@ -70,3 +52,5 @@ services:
 
 networks:
   webnet:
+    driver: overlay    
+

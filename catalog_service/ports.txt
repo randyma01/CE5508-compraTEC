@@ -1,0 +1,4 @@
+container 8080
+localhost 7000
+
+docker run -p 49161:8080 randyma01/catalog_service:*version* -d
