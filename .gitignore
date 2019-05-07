@@ -13,6 +13,8 @@ orders_services/nodejs_graphql/node_modules
 
 # -- users_services --#
 users_services/node_modules
+**/vendor
+
 
 #test-Gustavo
 docker-compose.yml

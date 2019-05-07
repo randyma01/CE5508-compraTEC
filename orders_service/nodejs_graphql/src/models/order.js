@@ -1,7 +1,4 @@
-import {
-  GraphQLSchema
-} from 'graphql';
-import Sequelize from 'sequelize';
+import Sequelize, { DataTypes } from 'sequelize';
 
 const db = new Sequelize('compratec', 'usctec@ctec', 'pwctec1234*', {
   dialect: 'mysql',
@@ -9,35 +6,16 @@ const db = new Sequelize('compratec', 'usctec@ctec', 'pwctec1234*', {
   port: 3306,
 })
 
-const Test = db.define('test', {
+db.define('order', {
   id: { type: Sequelize.INTEGER, primaryKey: true },
-  number: Sequelize.INTEGER,
-  amount: Sequelize.INTEGER
-});
-
-const Post = db.define('post', {
-  title: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  content: {
-    type: Sequelize.STRING,
-    allowNull: false
+  number: Sequelize.STRING,
+  flower: Sequelize.STRING,
+},
+  {
+    timestamps: false,
+    freezeTableName: false,
+    tableName: 'order'
   }
-});
-
-Test.hasMany(Post);
-Post.belongsTo(Test);
-db.sync({ force: true })
+);
 
 export default db;
-
-/*
-let Order = new GraphQLSchema({
-  id: Number,
-  number: Number,
-  amount: Number
-});
-
-export default Order;
-*/

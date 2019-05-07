@@ -1,14 +1,31 @@
 const graphql = require('graphql');
+const { GraphQLInt, GraphQLObjectType, GraphQLString } = graphql;
 
-const { GraphQLObjectType, GraphQLInt } = graphql;
 
 const OrderType = new GraphQLObjectType({
   name: 'Order',
-  fields: () => ({
-    id: { type: GraphQLInt },
-    number: { type: GraphQLInt },
-    amount: { type: GraphQLInt }
-  })
+  fields: () => {
+    return {
+      id: {
+        type: GraphQLInt,
+        resolve(order) {
+          return order.id
+        }
+      },
+      number: {
+        type: GraphQLString,
+        resolve(order) {
+          return order.number
+        }
+      },
+      flower: {
+        type: GraphQLString,
+        resolve(order) {
+          return order.flower
+        }
+      }
+    }
+  }
 });
 
 export default OrderType;
