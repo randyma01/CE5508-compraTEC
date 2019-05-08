@@ -1,90 +1,122 @@
 <?php
-
-
 require_once __DIR__ . '\vendor\autoload.php';
-
+require "Db.php";
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Schema;
 use GraphQL\Server\StandardServer;
 
 try {
+  $config = [
+    'host' => 'ctec.mysql.database.azure.com:3306',
+    'database' => 'compratec',
+    'username' => 'usctec@ctec',
+    'password' => 'pwctec1234*',
+    'port' => 3306
+  ];
 
-  $dbHost     = "ctec.mysql.database.azure.com:3306";
-  $dbUsername = "usctec@ctec";
-  $dbPassword = "pwctec1234*";
-  $dbName     = "compratec";
-  $port = 3306;
+  //initialisation of database connection
+  DB::init($config);
 
-
-  $con = mysqli_init();
-
-  if (!mysqli_real_connect($con, "ctec.mysql.database.azure.com", "usctec@ctec", $dbPassword, $dbName, 3306)) {
-    die('No pudo conectarse: ');
-  }
-  //echo 'Conectado satisfactoriamente';
-  
-  /*
-  $enlace =  mysql_connect($dbHost, $dbUsername, $dbPassword);
-  if (!$enlace) {
-    die('No pudo conectarse: ' . mysql_error());
-  }
-  echo 'Conectado satisfactoriamente';
-  mysql_close($enlace);
-  */
-
-
-
-  /*
-  // Create connection
-  $conn = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName, 3306);
-
-  // Check connection
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
-  echo "Connected successfully";
-  */
-
-
+  $userType = new ObjectType([
+    'name' => 'user',
+    'fields' => [
+      'id' => ['type' => Type::int()],
+      'first_name' => ['type' => Type::string()],
+      'last_name' => ['type' => Type::string()],
+      'email' => ['type' => Type::string()],
+      'password' => ['type' => Type::string()]
+    ]
+  ]);
 
   $queryType = new ObjectType([
-    'name' => 'Query',
+    'name' => 'getAllUser',
+    'description' => 'Get all user from database',
     'fields' => [
-      'echo' => [
-        'type' => Type::string(),
-        'args' => [
-          'message' => ['type' => Type::string()],
-        ],
+      'users' => [
+        'type' => Type::listOf($userType),
         'resolve' => function ($root, $args) {
-          return $root['prefix'] . $args['message'];
+          $results = DB::selectAllUser();
+          foreach ($results as $row) {
+            $rows[] = array(
+              'id' => intval($row->id),
+              'first_name' => strval($row->first_name),
+              'last_name' => strval($row->last_name),
+              'email' => strval($row->email),
+              'password' => strval($row->password)
+            );
+          }
+          return $rows; //json_encode
         }
       ],
     ],
   ]);
+
+
+
   $mutationType = new ObjectType([
-    'name' => 'Calc',
+    'name' => 'CRUD',
+    'description' => 'Create, Read, Update, Delete methods for User',
     'fields' => [
-      'sum' => [
-        'type' => Type::int(),
+      'createUser' => [
+        'description' => 'Insert new user in database',
+        'type' => Type::string(),
         'args' => [
-          'x' => ['type' => Type::int()],
-          'y' => ['type' => Type::int()],
+          'first_name' => ['type' => Type::string()],
+          'last_name' => ['type' => Type::string()],
+          'email' => ['type' => Type::string()],
+          'password' => ['type' => Type::string()],
         ],
         'resolve' => function ($root, $args) {
-          return $args['x'] + $args['y'];
-        },
+          $result = DB::createUser($args['first_name'], $args['last_name'], $args['email'], $args['password']);
+          return json_encode($result);
+        }
+      ],
+      'readUser' => [
+        'description' => 'Find user by id in database',
+        'type' =>  $userType,
+        'args' => [
+          'id' => ['type' => Type::int()]
+        ],
+        'resolve' => function ($root, $args) {
+          $result = DB::findOneUser($args['id']);
+          return $result;
+        }
+      ],
+      'updateUser' => [
+        'description' => 'Update user by id',
+        'type' =>  $userType,
+        'args' => [
+          'id' => ['type' => Type::int()],
+          'first_name' => ['type' => Type::string()],
+          'last_name' => ['type' => Type::string()],
+          'email' => ['type' => Type::string()],
+          'password' => ['type' => Type::string()]
+        ],
+        'resolve' => function ($root, $args) {
+          $result = DB::updateUser($args);
+          return $result;
+        }
+      ],
+      'deleteUser' => [
+        'description' => 'Delete user by id in database',
+        'type' =>  $userType,
+        'args' => [
+          'id' => ['type' => Type::int()]
+        ],
+        'resolve' => function ($root, $args) {
+          $result = DB::deleteUser($args['id']);
+          return $result;
+        }
       ],
     ],
   ]);
-  // See docs on schema options:
-  // http://webonyx.github.io/graphql-php/type-system/schema/#configuration-options
+
   $schema = new Schema([
     'query' => $queryType,
     'mutation' => $mutationType,
   ]);
-  // See docs on server options:
-  // http://webonyx.github.io/graphql-php/executing-queries/#server-configuration-options
+
   $server = new StandardServer([
     'schema' => $schema
   ]);
