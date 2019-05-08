@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.6'
 
 services:
   mongo_one:
@@ -34,6 +34,19 @@ services:
     command: mongod --replSet my-mongo-set
     ports:
       - '30004:27017'
+    networks:
+      - webnet
+
+  visualizer:
+    container_name: visualizer-1
+    image: dockersamples/visualizer:stable
+    ports:
+      - '80:8080'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    deploy:
+      placement:
+        constraints: [node.role == manager]
     networks:
       - webnet
 
