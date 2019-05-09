@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+
+  catalog_services:
+    image: randyma01/catalog_service:v3.1.0
+    depends_on:
+      - 'mongo_one'
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7000:8080'
+    networks:
+      - webnet
+  
+  orders_services:
+    image: randyma01/orders_service:v3.0.0
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7001:8080'
+    networks:
+      - webnet
+  
+  users_services:
+    image: gfallasc/compratec:v1.0.0
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7002:8000'
+    networks:
+      - webnet
+
+  mongo_one:
+    image: mongo
+    ports:
+    - "27017:27017"
+    volumes:
+    - data-volume:/data/db
+  
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+
+networks:
+  webnet:
+volumes:
+  data-volume:

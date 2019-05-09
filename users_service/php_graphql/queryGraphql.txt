@@ -1,0 +1,35 @@
+
+query getAllUser {
+  users {
+    id
+    first_name
+    last_name
+    email
+  }
+}
+
+mutation select {
+  readUser (id:8) {
+    id
+    first_name
+    last_name
+    email
+  }
+}
+
+mutation insert {
+  createUser (first_name:"Alonso", last_name:"Carrera", email:"gusfcarrera@hotmail.es", password:"tavo1234*")
+}
+
+
+mutation delete {
+  deleteUser (id:8) {
+    id
+  }
+}
+
+mutation update {
+  updateUser (id:7,first_name:"Pedro", last_name:"el Mono", email:"elmono@gmail.com", password:"momopedro*") {
+    id
+  }
+}
