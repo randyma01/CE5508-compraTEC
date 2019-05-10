@@ -1,52 +1,79 @@
-version: '3'
+version: '3.3'
 
 services:
 
   catalog_services:
-    image: randyma01/catalog_service:v3.1.0
+    container_name: catalog-services
+    image: randyma01/catalog_services:v3.1.0
     depends_on:
-      - 'mongo_one'
+      - 'mongo'
     deploy:
       restart_policy:
         condition: on-failure
     ports:
       - '7000:8080'
     networks:
-      - webnet
+      - webnets
   
   orders_services:
-    image: randyma01/orders_service:v3.0.0
+      container_name: orders-service
+      image: randyma01/orderservices:v3.0.0
+      depends_on:
+      - 'mongo'
     deploy:
       restart_policy:
         condition: on-failure
     ports:
       - '7001:8080'
     networks:
-      - webnet
-  
+      - webnets
+
   users_services:
-    image: gfallasc/compratec:v1.0.0
+    container_name: users-servive
+    image: gusfallasc/users_service:v1
     deploy:
       restart_policy:
         condition: on-failure
     ports:
-      - '7002:8000'
+      - '7000:8000'
+    networks:
+      - db_net
+
+  rs1:
+    image: mongo:3.4
+    command: mongod --replSet "rs0"
+    networks:
+      - webnet
+  rs2:
+    image: mongo:3.4
+    command: mongod --replSet "rs0"
     networks:
       - webnet
 
-  mongo_one:
-    image: mongo
-    ports:
-    - "27017:27017"
-    volumes:
-    - data-volume:/data/db
-  
+  rs3:
+    image: mongo:3.4
+    command: mongod --replSet "rs0"
+    networks:
+      - webnet
+
+  rs:
+    image: randyma01/mongo_replication:v1.0.0
+
+    networks:
+      - webnet
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+
   visualizer:
+    container_name: visualizer-1
     image: dockersamples/visualizer:stable
     ports:
-      - "8080:8080"
+      - '80:8080'
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - '/var/run/docker.sock:/var/run/docker.sock'
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -55,5 +82,3 @@ services:
 
 networks:
   webnet:
-volumes:
-  data-volume:

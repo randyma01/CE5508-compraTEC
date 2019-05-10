@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+
+  catalog_services:
+    container_name: catalog-services
+    image: randyma01/catalog_services:v2.0.0
+    depends_on:
+      - 'mongo'
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7000:8080'
+    networks:
+      - webnets
+  
+  orders_services:
+      container_name: orders-service
+      image: randyma01/orderservices:v2.0.0
+      depends_on:
+      - 'mongo'
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7001:8080'
+    networks:
+      - webnets
+
+  mongo_one:
+    container_name: mongo-1
+    image: mongo
+    commands: mongod --replSet my-mongo-set
+    ports: 
+      - '30001:27017'
+    volumes:
+      - "/home/docker/data:/data"
+    networks: 
+      - webnet
+
+  mongo_two:
+    container_name: mongo-2
+    image: mongo
+    commands: mongod --replSet my-mongo-set
+    ports: 
+      - '30002:27017'
+    volumes:
+      - "/home/docker/data:/data"
+    networks: 
+      - webnet
+
+  mongo_three:
+    container_name: mongo-3
+    image: mongo
+    commands: mongod --replSet my-mongo-set
+    ports: 
+      - '30003:27017'
+    volumes:
+      - "/home/docker/data:/data"
+    networks: 
+      - webnet
+  
+  mongo_four:
+    container_name: mongo-4
+    image: mongo
+    commands: mongod --replSet my-mongo-set
+    ports: 
+      - '30004:27017'
+    volumes:
+      - "/home/docker/data:/data"
+    networks: 
+      - webnet
+  
+  visualizer:
+    container_name: visualizer-1
+    image: dockersamples/visualizer:stable
+    ports:
+      - "80:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+
+networks:
+  webnet:
