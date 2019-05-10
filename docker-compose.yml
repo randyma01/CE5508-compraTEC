@@ -1,6 +1,44 @@
 version: '3.3'
 
 services:
+
+  catalog_services:
+    container_name: catalog-services
+    image: randyma01/catalog_services:v3.1.0
+    depends_on:
+      - 'mongo'
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7000:8080'
+    networks:
+      - webnets
+  
+  orders_services:
+      container_name: orders-service
+      image: randyma01/orderservices:v3.0.0
+      depends_on:
+      - 'mongo'
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7001:8080'
+    networks:
+      - webnets
+
+  users_services:
+    container_name: users-servive
+    image: gusfallausers_service:v1
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7000:8000'
+    networks:
+      - db_net
+
   rs1:
     image: mongo:3.4
     command: mongod --replSet "rs0"
