@@ -30,7 +30,7 @@ services:
 
   users_services:
     container_name: users-servive
-    image: gusfallausers_service:v1
+    image: gusfallasc/users_service:v1
     deploy:
       restart_policy:
         condition: on-failure

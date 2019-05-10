@@ -6,7 +6,7 @@ COPY . /app
 
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
-EXPOSE 7000 27018
+EXPOSE 8080 27017
 
 ENV NAME World
 

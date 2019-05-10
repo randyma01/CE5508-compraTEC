@@ -6,11 +6,18 @@
 .bin
 .vscode
 
+# -- catalog_services --#
+**/__pycache__
 
 # -- orders_services --#
 orders_service/nodejs_graphql/node_modules
 
 # -- users_services --#
+users_services/node_modules
+**/vendor
 users_service/composer
 users_service/webonyx
 
+
+#test-Gustavo
+**/node_modules

@@ -95,4 +95,4 @@ const RootMutation = new GraphQLObjectType({
 export default new GraphQLSchema({
   query: RootQuery,
   mutation: RootMutation
-});
+}); 
