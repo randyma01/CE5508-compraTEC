@@ -58,7 +58,6 @@ services:
 
   rs:
     image: randyma01/mongo_replication:v1.0.0
-
     networks:
       - webnet
     deploy:
