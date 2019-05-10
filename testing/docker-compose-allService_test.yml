@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+
+  mongo_db:
+    image: mongo
+    networks:
+      - ctec_net
+    ports:
+      - 27017:27017
+
+  catalog_services:
+    image: gfallasc/catalog-service:v4.0.0
+    deploy:
+      restart_policy:
+        condition: on-failure
+    environment:
+      MONGODB_HOST: mongo_db
+    depends_on:
+      - mongo_db
+    ports:
+      - '7000:8080'
+    networks:
+      - ctec_net
+
+  orders_services:
+    image: gfallasc/orders-service:v4.0.0
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7001:8080'
+    networks:
+      - ctec_net
+  
+  users_services:
+    image: gfallasc/users-service:v4.0.0
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7002:8080'
+    networks:
+      - ctec_net
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - ctec_net
+  
+
+networks:
+  ctec_net:

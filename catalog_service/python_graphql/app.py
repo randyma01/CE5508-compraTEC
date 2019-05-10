@@ -12,10 +12,13 @@ db = MongoEngine()
 
 app = Flask(__name__)
 
+MONGODB_HOST = os.environ.get('MONGODB_HOST')
+MONGODB_PORT = 27017
+
 app.config['MONGODB_SETTINGS'] = {
     'db': 'compraTEC',
-    'host': 'localhost',
-    'port': 27017
+    'host': MONGODB_HOST,
+    'port': MONGODB_PORT
 }
 db.init_app(app)
 

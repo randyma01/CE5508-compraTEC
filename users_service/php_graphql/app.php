@@ -1,10 +1,11 @@
 <?php
-require_once __DIR__ . '\vendor\autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 require "Db.php";
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Schema;
 use GraphQL\Server\StandardServer;
+
 
 try {
   $config = [
@@ -51,9 +52,7 @@ try {
       ],
     ],
   ]);
-
-
-
+ 
   $mutationType = new ObjectType([
     'name' => 'CRUD',
     'description' => 'Create, Read, Update, Delete methods for User',
