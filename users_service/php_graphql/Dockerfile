@@ -17,6 +17,6 @@ RUN composer install
 
 COPY . /app
 
-EXPOSE 8000
+EXPOSE 8080
 
-CMD php -S localhost:8000 ./app.php
+CMD php -S localhost:8080 ./app.php
