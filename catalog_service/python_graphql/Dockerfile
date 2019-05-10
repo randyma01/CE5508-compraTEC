@@ -11,7 +11,7 @@ COPY . /app
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
 # Make port 8080 available to the world outside this container
-EXPOSE 7000 27018
+EXPOSE 8080
 
 
 # Define environment variable

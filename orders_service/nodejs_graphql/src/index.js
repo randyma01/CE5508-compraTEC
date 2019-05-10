@@ -1,6 +1,5 @@
 import hapi from 'hapi';
 import { graphqlHapi, graphiqlHapi } from 'apollo-server-hapi';
-import createFlowersRoutes from './api/v1/order';
 import schema from './graphql/schema';
 
 const init = async () => {
