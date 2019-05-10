@@ -1,70 +1,36 @@
 version: '3.3'
 
 services:
-
   catalog_services:
     container_name: catalog-services
     image: randyma01/catalog_services:v3.1.0
-    depends_on:
-      - 'mongo'
     deploy:
+      replicas: 2
       restart_policy:
         condition: on-failure
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 50M
     ports:
       - '7000:8080'
     networks:
-      - webnets
-  
+      - webnet
+
   orders_services:
-      container_name: orders-service
-      image: randyma01/orderservices:v3.0.0
-      depends_on:
-      - 'mongo'
+    container_name: orders-service
+    image: randyma01/orderservices:v3.0.0
     deploy:
       restart_policy:
         condition: on-failure
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 50M
     ports:
       - '7001:8080'
     networks:
-      - webnets
-
-  users_services:
-    container_name: users-servive
-    image: gusfallausers_service:v1
-    deploy:
-      restart_policy:
-        condition: on-failure
-    ports:
-      - '7000:8000'
-    networks:
-      - db_net
-
-  rs1:
-    image: mongo:3.4
-    command: mongod --replSet "rs0"
-    networks:
       - webnet
-  rs2:
-    image: mongo:3.4
-    command: mongod --replSet "rs0"
-    networks:
-      - webnet
-
-  rs3:
-    image: mongo:3.4
-    command: mongod --replSet "rs0"
-    networks:
-      - webnet
-
-  rs:
-    image: randyma01/mongo_replication:v1.0.0
-    networks:
-      - webnet
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 10
 
   visualizer:
     container_name: visualizer-1
@@ -76,6 +42,34 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
+    networks:
+      - webnet
+
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - '/home/docker/data:/data'
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    command: redis-server --appendonly yes
+    networks:
+      - webnet
+
+  web:
+    image: randyma01/counter_service:v1.0.0.
+    deploy:
+      replicas: 5
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 50M
+    ports:
+      - '83:80'
     networks:
       - webnet
 
