@@ -1,84 +1,73 @@
-version: '3.3'
+version: '3'
 
 services:
+  mongo_db:
+    image: mongo
+    networks:
+      - ctec_net
+    ports:
+      - 27017:27017
 
   catalog_services:
-    container_name: catalog-services
-    image: randyma01/catalog_services:v3.1.0
-    depends_on:
-      - 'mongo'
+    image: gfallasc/catalog-service:v4.0.0
     deploy:
+      replicas: 2
       restart_policy:
         condition: on-failure
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 50M
+    environment:
+      MONGODB_HOST: mongo_db
+    depends_on:
+      - mongo_db
     ports:
       - '7000:8080'
     networks:
-      - webnets
-  
+      - ctec_net
+
   orders_services:
-      container_name: orders-service
-      image: randyma01/orderservices:v3.0.0
-      depends_on:
-      - 'mongo'
+    image: gfallasc/orders-service:v4.0.0
     deploy:
+      replicas: 2
       restart_policy:
         condition: on-failure
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 50M
     ports:
       - '7001:8080'
     networks:
-      - webnets
+      - ctec_net
 
   users_services:
-    container_name: users-servive
-    image: gusfallasc/users_service:v1
+    image: gfallasc/users-service:v4.0.0
     deploy:
+      replicas: 2
       restart_policy:
         condition: on-failure
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 50M
     ports:
-      - '7000:8000'
+      - '7002:8080'
     networks:
-      - db_net
-
-  rs1:
-    image: mongo:3.4
-    command: mongod --replSet "rs0"
-    networks:
-      - webnet
-  rs2:
-    image: mongo:3.4
-    command: mongod --replSet "rs0"
-    networks:
-      - webnet
-
-  rs3:
-    image: mongo:3.4
-    command: mongod --replSet "rs0"
-    networks:
-      - webnet
-
-  rs:
-    image: randyma01/mongo_replication:v1.0.0
-
-    networks:
-      - webnet
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 10
+      - ctec_net
 
   visualizer:
-    container_name: visualizer-1
     image: dockersamples/visualizer:stable
     ports:
-      - '80:8080'
+      - '8080:8080'
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
     deploy:
       placement:
         constraints: [node.role == manager]
     networks:
-      - webnet
+      - ctec_net
 
 networks:
-  webnet:
+  ctec_net:

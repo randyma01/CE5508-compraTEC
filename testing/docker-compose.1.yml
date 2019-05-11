@@ -1,0 +1,84 @@
+version: '3.3'
+
+services:
+
+  catalog_services:
+    container_name: catalog-services
+    image: randyma01/catalog_services:v3.1.0
+    depends_on:
+      - 'mongo'
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7000:8080'
+    networks:
+      - webnets
+  
+  orders_services:
+      container_name: orders-service
+      image: randyma01/orderservices:v3.0.0
+      depends_on:
+      - 'mongo'
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7001:8080'
+    networks:
+      - webnets
+
+  users_services:
+    container_name: users-servive
+    image: gusfallasc/users_service:v1
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '7000:8000'
+    networks:
+      - db_net
+
+  rs1:
+    image: mongo:3.4
+    command: mongod --replSet "rs0"
+    networks:
+      - webnet
+  rs2:
+    image: mongo:3.4
+    command: mongod --replSet "rs0"
+    networks:
+      - webnet
+
+  rs3:
+    image: mongo:3.4
+    command: mongod --replSet "rs0"
+    networks:
+      - webnet
+
+  rs:
+    image: randyma01/mongo_replication:v1.0.0
+
+    networks:
+      - webnet
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+
+  visualizer:
+    container_name: visualizer-1
+    image: dockersamples/visualizer:stable
+    ports:
+      - '80:8080'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+
+networks:
+  webnet:
